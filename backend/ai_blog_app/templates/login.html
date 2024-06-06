@@ -26,13 +26,13 @@
                 <form action="" class="space-y-4" method="POST">
                     {% csrf_token %}
 
-                {% if error_message %}
-                    <div class="items-center text-red">
-                        <h2>
-                            {{ error_message }}
-                        </h2>
-                    </div>
-                {% endif %}
+                    {% if error_message %}
+                        <div class="flex justify-center text-red-500">
+                            <h2>
+                                {{ error_message }}
+                            </h2>
+                        </div>
+                    {% endif %}
 
                     <h2 class="text-xl font-semibold">Login</h2>
                     <div>
