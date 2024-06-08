@@ -95,9 +95,19 @@ def generate_summary_from_transcription(transcription):
     
     return generated_content
 
+@login_required
 def summary_list(request):
     summaries = SummaryPost.objects.filter(user=request.user)
     return render(request, "all-blogs.html", {'summaries': summaries})
+
+@login_required
+def summary_details(request, pk):
+    summary_detail = SummaryPost.objects.get(id=pk)
+    if request.user == summary_detail.user:
+        return render(request, 'blog-details.html', {'summary_detail': summary_detail})
+    else:
+        return redirect('/')
+    
 
 def user_login(request):
     if request.method == "POST":
