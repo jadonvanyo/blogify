@@ -1,3 +1,4 @@
+from .models import SummaryPost
 from decouple import config
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -41,6 +42,13 @@ def generate_blog(request):
             return JsonResponse({'error': "Failed to generate summary"}, status=405)
         
         # save summary to database
+        new_summary = SummaryPost.objects.create(
+            user=request.user,
+            youtube_title=title,
+            youtube_link=yt_link,
+            generated_content=summary
+        )
+        new_summary.save()
         
         # return summary as a response
         return JsonResponse({'content': summary})
