@@ -31,8 +31,11 @@ def generate_blog(request):
         # get yt title
         title = yt_title(yt_link)
         
+        # download audio file
+        audio_file = download_audio(yt_link)
+        
         # get transcript
-        transcription = get_transcription(yt_link)
+        transcription = get_transcription(audio_file)
         if not transcription:
             return JsonResponse({'error': "Failed to get transcript"}, status=500)
         
@@ -49,6 +52,9 @@ def generate_blog(request):
             generated_content=summary
         )
         new_summary.save()
+        
+        # TODO: Delete audio file from media
+        os.remove(audio_file)
         
         # return summary as a response
         return JsonResponse({'content': summary})
@@ -69,8 +75,7 @@ def download_audio(link):
     os.rename(out_file, new_file)
     return new_file
 
-def get_transcription(link):
-    audio_file = download_audio(link)
+def get_transcription(audio_file):
     aai_api_key = config('ASSEMBLY_AI_API_KEY')
     aai.settings.api_key = f"{aai_api_key}"
     
@@ -84,7 +89,6 @@ def generate_summary_from_transcription(transcription):
     
     prompt = f"Write a summary of the following transcript from a YouTube video. \nTranscript: '''\n{transcription}\n'''"
     
-    # TODO: Update this to messages and 
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
