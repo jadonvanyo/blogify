@@ -95,6 +95,10 @@ def generate_summary_from_transcription(transcription):
     
     return generated_content
 
+def summary_list(request):
+    summaries = SummaryPost.objects.filter(user=request.user)
+    return render(request, "all-blogs.html", {'summaries': summaries})
+
 def user_login(request):
     if request.method == "POST":
         # Get user entered info
