@@ -53,7 +53,7 @@ def generate_blog(request):
         )
         new_summary.save()
         
-        # TODO: Delete audio file from media
+        # Delete audio file from media
         os.remove(audio_file)
         
         # return summary as a response
@@ -87,7 +87,7 @@ def get_transcription(audio_file):
 def generate_summary_from_transcription(transcription):
     openai.api_key = f"{config('OPENAI_API_KEY')}"
     
-    prompt = f"Write a summary of the following transcript from a YouTube video. \nTranscript: '''\n{transcription}\n'''"
+    prompt = f"Write a summary of the following transcript from a YouTube video. Please include 3-5 key takeaways from the transcript. \nTranscript: '''\n{transcription}\n'''"
     
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
